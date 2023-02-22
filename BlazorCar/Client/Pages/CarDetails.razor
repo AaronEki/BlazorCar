@@ -1,0 +1,84 @@
+﻿@page "/car/{id}"
+@inject ICarService CarService
+
+<div class="media-details">
+    <div class="media-img-wrapper-large mr-2">
+        <img class="media-img-large" src="@car.Image" alt="@car.Title" />
+    </div>
+    <div class="media-body-details">        
+        <h2 class="mb-0">@car.Title</h2>
+        <p>@car.Description</p>        
+
+        <div class="vehicle-info">
+            <div class="details-item">
+                Mileage
+                <br />
+                <strong>
+                    @car.Mileage
+                </strong>
+            </div>
+            <div class="details-item">
+                Engine + Fuel Type
+                <br />
+                <strong>
+                    @car.Engine
+                </strong>
+            </div>
+            <div class="details-item">
+                Gearbox
+                <br />
+                <strong>
+                    @car.Gearbox
+                </strong>
+            </div>
+            <div class="details-item">
+                Bodystyle
+                <br />
+                <strong>
+                    @car.Bodystyle
+                </strong>
+            </div>
+            <div class="details-item">
+                Colour
+                <br />
+                <strong>
+                    @car.Colour
+                </strong>
+            </div>
+            <div class="details-item">
+                Doors
+                <br />
+                <strong>
+                    @car.Doors
+                </strong>
+            </div>
+        </div>
+        
+        @if(car.OriginalPrice > car.Price)
+        {
+            <br>
+            <h6 class="text-muted original-price">£@car.OriginalPrice</h6>
+        }
+        <h4 class="price">£@car.Price</h4>
+        <button class="btn btn-primary"><i class="oi oi-cart"></i>&nbsp;&nbsp;&nbsp;Add to Cart</button>
+    </div>
+</div>
+
+@code {
+    private Car car = null;
+
+    // getting the Id parameter for use  in the @page directive
+    [Parameter]
+    public string Id { get; set; }
+
+    protected override void OnInitialized()
+    {
+        // if a user is to access the site directly from a link - and not from the home page - load the related CarDetails
+        if(CarService.Cars == null || CarService.Cars.Count == 0)
+        {
+            CarService.LoadCars();
+        }
+
+        car = CarService.Cars.FirstOrDefault(c => c.Id == Int32.Parse(Id));
+    }
+}

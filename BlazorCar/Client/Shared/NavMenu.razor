@@ -39,9 +39,10 @@
         collapseNavMenu = !collapseNavMenu;
     }
 
-    protected override void OnInitialized()
+    //return type task for asyncronous 
+    protected override async Task OnInitializedAsync()
     {
-        // loading the category service
-        CategoryService.LoadCategories();
+        // loading the category service (calling asyncronous method with await)
+        await CategoryService.LoadCategories();
     }
 }

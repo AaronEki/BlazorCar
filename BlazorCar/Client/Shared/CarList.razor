@@ -30,8 +30,8 @@
     public int? CategoryId { get; set; } = null;
 
     // loading the list of cars from the CarService.cs file 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        CarService.LoadCars();
+        await CarService.LoadCars();
     }
 }

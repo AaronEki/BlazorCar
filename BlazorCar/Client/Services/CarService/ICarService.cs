@@ -4,7 +4,7 @@ namespace BlazorCar.Client.Services.CarService
 {
     public interface ICarService
     {
-        public List<Car> Cars { get; set; }
-        void LoadCars();
+        List<Car> Cars { get; set; }
+        Task LoadCars();
     }
 }

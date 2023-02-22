@@ -1,23 +1,30 @@
 ﻿using BlazorCar.Shared;
 using System.Xml.Linq;
 using System;
+using System.Runtime.CompilerServices;
+using System.Net.Http;
+using System.Net.Http.Json;
 
 namespace BlazorCar.Client.Services.CategoryService
 {
     public class CategoryService : ICategoryService
     {
+        //create and assign the field http
+        private readonly HttpClient _http;
+
         //implementing the interface
         public List<Category> Categories { get; set; } = new List<Category>();
 
-        public void LoadCategories()
+        //web service call (requires injecting the http client class)
+        //constructor to inject the http client class - to be able to make the http call
+        public CategoryService(HttpClient http)
         {
-            Categories = new List<Category> {
-                new Category{ Id = 1, Name = "Hatchback", Url = "hatchback" },
-                new Category{ Id = 2, Name = "Estate", Url = "estate" },
-                new Category{ Id = 3, Name = "SUV", Url = "suv" },
-                new Category{ Id = 4, Name = "Coupe", Url = "coupe" },
-                new Category{ Id = 5, Name = "Specials", Url = "specials" }
-            };
+            _http = http;
+        }
+
+        public async Task  LoadCategories()
+        {
+            Categories = await _http.GetFromJsonAsync<List<Category>>("api/Category");
         }
     }
 }

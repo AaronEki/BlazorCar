@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -19,7 +20,9 @@ namespace BlazorCar.Shared
         public string Bodystyle { get; set; }
         public string Colour { get; set; }
         public string Doors { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
         public decimal OriginalPrice { get; set; }
         public bool IsPublic { get; set; }
         public bool IsDeleted { get; set; }

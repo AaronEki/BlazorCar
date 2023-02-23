@@ -1,8 +1,9 @@
 ﻿@inject ICarService CarService
+@implements IDisposable
 
 <ul class="list-unstyled"> 
     <!-- for loop for every car in the CarService list - display the following code --> 
-    @foreach (var car in CategoryId == null? CarService.Cars : CarService.Cars.Where(c => c.CategoryId == CategoryId))
+    @foreach (var car in CarService.Cars)
     {
         <li class="media my-3">
             <div class="media-img-wrapper mr-2">
@@ -26,12 +27,18 @@
 </ul>
 
 @code {
-    [Parameter]
-    public int? CategoryId { get; set; } = null;
+    //[Parameter]
+    //public int? CategoryId { get; set; } = null;
 
     // loading the list of cars from the CarService.cs file 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await CarService.LoadCars();
+        //await CarService.LoadCars();
+        CarService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CarService.OnChange -= StateHasChanged;
     }
 }

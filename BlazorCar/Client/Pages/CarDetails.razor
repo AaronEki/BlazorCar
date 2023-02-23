@@ -1,4 +1,4 @@
-﻿@page "/car/{id}"
+﻿@page "/car/{id:int}"
 @inject ICarService CarService
 
 <div class="media-details">
@@ -65,20 +65,14 @@
 </div>
 
 @code {
-    private Car car = null;
+    private Car car = new Car();
 
     // getting the Id parameter for use  in the @page directive
     [Parameter]
-    public string Id { get; set; }
+    public int Id { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        // if a user is to access the site directly from a link - and not from the home page - load the related CarDetails
-        if(CarService.Cars == null || CarService.Cars.Count == 0)
-        {
-            CarService.LoadCars();
-        }
-
-        car = CarService.Cars.FirstOrDefault(c => c.Id == Int32.Parse(Id));
+        car = await CarService.GetCar(Id);
     }
 }

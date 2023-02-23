@@ -20,5 +20,17 @@ namespace BlazorCar.Server.Controllers
         {
             return Ok(await _carService.GetAllCars());
         }
+
+        [HttpGet("Category/{categoryUrl}")]
+        public async Task<ActionResult<List<Car>>> GetCarsByCategory(string categoryUrl)
+        {
+            return Ok(await _carService.GetCarsByCategory(categoryUrl));
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Car>> GetCar(int id)
+        {
+            return Ok(await _carService.GetCar(id));
+        }
     }
 }

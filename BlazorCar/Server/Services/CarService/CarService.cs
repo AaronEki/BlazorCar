@@ -1,9 +1,16 @@
-﻿using BlazorCar.Shared;
+﻿using BlazorCar.Server.Services.CategoryService;
+using BlazorCar.Shared;
+using System.Net.Http.Headers;
 
 namespace BlazorCar.Server.Services.CarService
 {
     public class CarService : ICarService
     {
+        private readonly ICategoryService _categoryService;
+        public CarService(ICategoryService categoryService) 
+        { 
+                _categoryService = categoryService;
+        }
         
         public async Task<List<Car>> GetAllCars()
         {
@@ -12,12 +19,14 @@ namespace BlazorCar.Server.Services.CarService
 
         public async Task<Car> GetCar(int id)
         {
-            throw new NotImplementedException();
+            Car car = Cars.FirstOrDefault(c => c.Id == id);
+            return car;
         }
 
         public async Task<List<Car>> GetCarsByCategory(string categoryUrl)
         {
-            throw new NotImplementedException();
+            Category category = await _categoryService.GetCategoryByUrl(categoryUrl);
+            return Cars.Where(c => c.CategoryId == category.Id).ToList();
         }
         public List<Car> Cars { get; set; } = new List<Car>{
                 new Car

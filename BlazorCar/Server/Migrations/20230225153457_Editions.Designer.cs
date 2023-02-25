@@ -4,6 +4,7 @@ using BlazorCar.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorCar.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230225153457_Editions")]
+    partial class Editions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -354,28 +357,6 @@ namespace BlazorCar.Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Editions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "No Warranty"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "3 Month Warranty"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "6 Month Warranty"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "12 Month Warranty"
-                        });
                 });
 
             modelBuilder.Entity("CarEdition", b =>
@@ -391,168 +372,6 @@ namespace BlazorCar.Server.Migrations
                     b.HasIndex("EditionsId");
 
                     b.ToTable("CarEdition");
-
-                    b.HasData(
-                        new
-                        {
-                            CarsId = 1,
-                            EditionsId = 1
-                        },
-                        new
-                        {
-                            CarsId = 1,
-                            EditionsId = 2
-                        },
-                        new
-                        {
-                            CarsId = 1,
-                            EditionsId = 3
-                        },
-                        new
-                        {
-                            CarsId = 1,
-                            EditionsId = 4
-                        },
-                        new
-                        {
-                            CarsId = 2,
-                            EditionsId = 1
-                        },
-                        new
-                        {
-                            CarsId = 3,
-                            EditionsId = 1
-                        },
-                        new
-                        {
-                            CarsId = 3,
-                            EditionsId = 2
-                        },
-                        new
-                        {
-                            CarsId = 3,
-                            EditionsId = 3
-                        },
-                        new
-                        {
-                            CarsId = 3,
-                            EditionsId = 4
-                        },
-                        new
-                        {
-                            CarsId = 4,
-                            EditionsId = 1
-                        },
-                        new
-                        {
-                            CarsId = 4,
-                            EditionsId = 2
-                        },
-                        new
-                        {
-                            CarsId = 4,
-                            EditionsId = 3
-                        },
-                        new
-                        {
-                            CarsId = 4,
-                            EditionsId = 4
-                        },
-                        new
-                        {
-                            CarsId = 5,
-                            EditionsId = 1
-                        },
-                        new
-                        {
-                            CarsId = 5,
-                            EditionsId = 2
-                        },
-                        new
-                        {
-                            CarsId = 5,
-                            EditionsId = 3
-                        },
-                        new
-                        {
-                            CarsId = 5,
-                            EditionsId = 4
-                        },
-                        new
-                        {
-                            CarsId = 6,
-                            EditionsId = 1
-                        },
-                        new
-                        {
-                            CarsId = 6,
-                            EditionsId = 2
-                        },
-                        new
-                        {
-                            CarsId = 6,
-                            EditionsId = 3
-                        },
-                        new
-                        {
-                            CarsId = 6,
-                            EditionsId = 4
-                        },
-                        new
-                        {
-                            CarsId = 7,
-                            EditionsId = 1
-                        },
-                        new
-                        {
-                            CarsId = 7,
-                            EditionsId = 2
-                        },
-                        new
-                        {
-                            CarsId = 7,
-                            EditionsId = 3
-                        },
-                        new
-                        {
-                            CarsId = 7,
-                            EditionsId = 4
-                        },
-                        new
-                        {
-                            CarsId = 8,
-                            EditionsId = 1
-                        },
-                        new
-                        {
-                            CarsId = 9,
-                            EditionsId = 1
-                        },
-                        new
-                        {
-                            CarsId = 9,
-                            EditionsId = 2
-                        },
-                        new
-                        {
-                            CarsId = 10,
-                            EditionsId = 1
-                        },
-                        new
-                        {
-                            CarsId = 10,
-                            EditionsId = 2
-                        },
-                        new
-                        {
-                            CarsId = 10,
-                            EditionsId = 3
-                        },
-                        new
-                        {
-                            CarsId = 10,
-                            EditionsId = 4
-                        });
                 });
 
             modelBuilder.Entity("BlazorCar.Shared.Car", b =>

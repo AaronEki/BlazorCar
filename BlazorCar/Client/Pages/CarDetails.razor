@@ -7,8 +7,7 @@
     </div>
     <div class="media-body-details">        
         <h2 class="mb-0">@car.Title</h2>
-        <p>@car.Description</p>        
-
+        <p>@car.Description</p>      
         <div class="vehicle-info">
             <div class="details-item">
                 Mileage
@@ -53,12 +52,24 @@
                 </strong>
             </div>
         </div>
-        
+        @if(car.Editions != null && car.Editions.Count >0){
+            <br /><br />
+            <strong>Car Warranty</strong>
+            <div class="form-group">
+                <select class="form control">
+                    @foreach (var edition in car.Editions){
+                        <option>@edition.Name</option>
+                    }
+                </select>
+            </div>
+
+        }
         @if(car.OriginalPrice > car.Price)
         {
             <br>
             <h6 class="text-muted original-price">£@car.OriginalPrice</h6>
         }
+        <br />
         <h4 class="price">£@car.Price</h4>
         <button class="btn btn-primary"><i class="oi oi-cart"></i>&nbsp;&nbsp;&nbsp;Add to Cart</button>
     </div>
@@ -71,6 +82,8 @@
     [Parameter]
     public int Id { get; set; }
 
+    // This allows us asyncronously get the car by the id provided by the parameter above
+    // with this we can display the details of the specific car clicked by the user
     protected override async Task OnInitializedAsync()
     {
         car = await CarService.GetCar(Id);

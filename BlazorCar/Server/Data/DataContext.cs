@@ -3,18 +3,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlazorCar.Server.Data
 {
+    /*class to allow us to get our data onto the database using this alongside the dotnet ef migrations commands
+    we can migrate the data that is held in this file to a new migrations file (dotnet ef migrations add <name>). This file can then be used
+    to update the sqlexpress database with our categories and our cars (dotnet ef database update)*/
     public class DataContext : DbContext
-    {
+    {        
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
             
         }
 
+        //setting the tables we will see in the database - Categories and Cars
         public DbSet<Category> Categories { get; set; }
         public DbSet<Car> Cars { get; set; }
+        public DbSet<Edition> Editions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Building our categories in the database - with the data provied in the HasData funciton
+            //this will create the categories listed here in the database
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Hatchback", Url = "hatchback" },
                 new Category { Id = 2, Name = "Estate", Url = "estate" },
@@ -22,7 +29,7 @@ namespace BlazorCar.Server.Data
                 new Category { Id = 4, Name = "Coupe", Url = "coupe" },
                 new Category { Id = 5, Name = "Specials", Url = "specials" }
                 );
-
+            //builing our cars in the database - the details provided below will be input into the database
             modelBuilder.Entity<Car>().HasData(
                 new Car
                 {
@@ -38,7 +45,8 @@ namespace BlazorCar.Server.Data
                     Colour = "Rebel Blue",
                     Doors = "5",
                     Price = 12579,
-                    OriginalPrice = 13000
+                    OriginalPrice = 13000,
+                    DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
                 {
@@ -55,6 +63,7 @@ namespace BlazorCar.Server.Data
                     Doors = "3",
                     Price = 26000,
                     OriginalPrice = 29000,
+                    DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
                 {
@@ -70,7 +79,8 @@ namespace BlazorCar.Server.Data
                     Colour = "Blaze Red",
                     Doors = "3",
                     Price = 5325,
-                    OriginalPrice = 5330
+                    OriginalPrice = 5330,
+                    DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
                 {
@@ -86,7 +96,8 @@ namespace BlazorCar.Server.Data
                     Colour = "Corrida Red",
                     Doors = "5",
                     Price = 10650,
-                    OriginalPrice = 10650
+                    OriginalPrice = 10650,
+                    DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
                 {
@@ -102,7 +113,8 @@ namespace BlazorCar.Server.Data
                     Colour = "Black",
                     Doors = "5",
                     Price = 43500,
-                    OriginalPrice = 44000
+                    OriginalPrice = 44000,
+                    DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
                 {
@@ -118,7 +130,8 @@ namespace BlazorCar.Server.Data
                     Colour = "Black",
                     Doors = "3",
                     Price = 7000,
-                    OriginalPrice = 8000
+                    OriginalPrice = 8000,
+                    DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
                 {
@@ -134,7 +147,8 @@ namespace BlazorCar.Server.Data
                     Colour = "Grey",
                     Doors = "5",
                     Price = 41990,
-                    OriginalPrice = 41990
+                    OriginalPrice = 41990,
+                    DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
                 {
@@ -150,7 +164,8 @@ namespace BlazorCar.Server.Data
                     Colour = "Grey",
                     Doors = "3",
                     Price = 39460,
-                    OriginalPrice = 39460
+                    OriginalPrice = 39460,
+                    DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
                 {
@@ -166,7 +181,8 @@ namespace BlazorCar.Server.Data
                     Colour = "Grey",
                     Doors = "3",
                     Price = 123400,
-                    OriginalPrice = 123400
+                    OriginalPrice = 123400,
+                    DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
                 {
@@ -182,9 +198,61 @@ namespace BlazorCar.Server.Data
                     Colour = "Red",
                     Doors = "3",
                     Price = 84000,
-                    OriginalPrice = 86000
+                    OriginalPrice = 86000,
+                    DateCreated = new DateTime(2023, 1, 1)
                 }
-                );            
+                );
+
+            modelBuilder.Entity<Edition>().HasData(
+                    new Edition { Id = 1, Name = "No Warranty"},
+                    new Edition { Id = 2, Name = "3 Month Warranty" },
+                    new Edition { Id = 3, Name = "6 Month Warranty" },
+                    new Edition { Id = 4, Name = "12 Month Warranty" }
+                );
+
+            modelBuilder.SharedTypeEntity<Dictionary<string, object>>("CarEdition").HasData(                    
+                    new { EditionsId = 1, CarsId = 1 },
+                    new { EditionsId = 2, CarsId = 1 },
+                    new { EditionsId = 3, CarsId = 1 },
+                    new { EditionsId = 4, CarsId = 1 },
+
+                    new { EditionsId = 1, CarsId = 2 },
+
+                    new { EditionsId = 1, CarsId = 3 },
+                    new { EditionsId = 2, CarsId = 3 },
+                    new { EditionsId = 3, CarsId = 3 },
+                    new { EditionsId = 4, CarsId = 3 },
+
+                    new { EditionsId = 1, CarsId = 4 },
+                    new { EditionsId = 2, CarsId = 4 },
+                    new { EditionsId = 3, CarsId = 4 },
+                    new { EditionsId = 4, CarsId = 4 },
+
+                    new { EditionsId = 1, CarsId = 5 },
+                    new { EditionsId = 2, CarsId = 5 },
+                    new { EditionsId = 3, CarsId = 5 },
+                    new { EditionsId = 4, CarsId = 5 },
+
+                    new { EditionsId = 1, CarsId = 6 },
+                    new { EditionsId = 2, CarsId = 6 },
+                    new { EditionsId = 3, CarsId = 6 },
+                    new { EditionsId = 4, CarsId = 6 },
+
+                    new { EditionsId = 1, CarsId = 7 },
+                    new { EditionsId = 2, CarsId = 7 },
+                    new { EditionsId = 3, CarsId = 7 },
+                    new { EditionsId = 4, CarsId = 7 },
+
+                    new { EditionsId = 1, CarsId = 8 },
+
+                    new { EditionsId = 1, CarsId = 9 },
+                    new { EditionsId = 2, CarsId = 9 },
+
+                    new { EditionsId = 1, CarsId = 10 },
+                    new { EditionsId = 2, CarsId = 10 },
+                    new { EditionsId = 3, CarsId = 10 },
+                    new { EditionsId = 4, CarsId = 10 }
+                );
         }
     }
 }

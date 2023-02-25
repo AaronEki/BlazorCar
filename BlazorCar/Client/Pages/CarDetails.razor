@@ -52,7 +52,7 @@
                 </strong>
             </div>
         </div>
-        @if(car.Variants != null && car.Variants.Count > 1){
+        @if(car.Variants != null && car.Variants.Count > 0){
             <br /><br />
             <strong>Car Warranty</strong>
             <div class="form-group">
@@ -91,10 +91,7 @@
     // with this we can display the details of the specific car clicked by the user
     protected override async Task OnInitializedAsync()
     {
-        car = await CarService.GetCar(Id);
-        if(car.Variants.Count > 0){
-            currentEditionId = car.Variants[0].EditionId;
-        }
+        car = await CarService.GetCar(Id);        
     }
 
     private CarVariant GetSelectedVariant(){

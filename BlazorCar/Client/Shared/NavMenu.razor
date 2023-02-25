@@ -43,6 +43,7 @@
     protected override async Task OnInitializedAsync()
     {
         // loading the category service (calling asyncronous method with await)
+        // this will allow us to display the categories stored in the database on the navbar
         await CategoryService.LoadCategories();
     }
 }

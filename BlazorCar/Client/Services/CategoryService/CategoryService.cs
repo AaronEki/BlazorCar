@@ -22,6 +22,7 @@ namespace BlazorCar.Client.Services.CategoryService
             _http = http;
         }
 
+        // returning a list of categorys object retrieved from the server from the use of a HTTPGET
         public async Task  LoadCategories()
         {
             Categories = await _http.GetFromJsonAsync<List<Category>>("api/Category");

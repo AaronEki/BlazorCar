@@ -23,20 +23,13 @@ namespace BlazorCar.Shared
         public string Gearbox { get; set; }
         public string Bodystyle { get; set; }
         public string Colour { get; set; }
-        public string Doors { get; set; }
+        public string Doors { get; set; }        
         
-        //Specifying the type of decimal we will be using with the sql server - if we do not specify it could default to 
-        //type that we do not want to use! Best to specify that we want this many characters before/after the .
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal Price { get; set; }
-
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal OriginalPrice { get; set; }
         public bool IsPublic { get; set; }
         public bool IsDeleted { get; set; }
         public Category Category { get; set; }
         public int CategoryId { get; set; }
-        public List<Edition> Editions { get; set; }
+        public List<CarVariant> Variants { get; set; } = new List<CarVariant>();
         //DateTime? makes the value nullable
         public DateTime? DateCreated { get; set; } = DateTime.Now;
         public DateTime? DateUpdated { get; set; }

@@ -1,0 +1,46 @@
+﻿.item-container{
+    display: flex;
+    padding: 6px;
+}
+
+.item-image-wrapper{
+    width: 150px;
+    text-align: center;
+}
+
+.item-image{
+    max-height: 150px;
+    max-width: 150px;
+    padding: 6px;
+}
+
+.item-name{
+    flex-grow: 1;
+    padding: 6px;
+}
+
+.item-price{
+    font-weight: 600;
+    text-align: right;
+}
+
+.payment-type{
+    text-align: right;
+}
+
+.btn-delete {
+    border-radius: 25px;
+    background: #ffcccb;
+    border: #ffcccb;
+    padding: 6px;
+    color: red;
+    font-size: 12px;
+}
+
+.btn-delete:hover{
+    text-decoration: underline;
+}
+
+.btn-pay{
+
+}

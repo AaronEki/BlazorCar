@@ -1,5 +1,8 @@
 ﻿@page "/cart"
 @inject ICartService CartService
+@inject IToastService ToastService
+
+@inject IJSRuntime jsRuntime
 
 <h3>Payment Cart</h3>
 
@@ -30,27 +33,68 @@ else{
 
         }
         <div class="item-price">
-            Total (@cartItems.Count) : £@cartItems.Sum( item => item.Price)
+            Total (@cartItems.Count) : £@totalPrice
         </div>
         <div class="payment-type">
+            <br>
             <button class="btn-pay">
                 Pay in Cash
             </button>
         </div>
+        <b><hr><hr></b>
+        <div>
+            <h3>Finance Details</h3>            
+            <p>
+                If you wish to finance the vehicle over a period of time - use the slider below to select the duration of the finance:
+            </p>
+            <div class="slide-container">
+                <input type="range" min="6" max="48" class="slider" id="myRange" @bind-value:event="oninput" @bind-value="@sliderValue">
+            </div>
+            <strong class="Months">@sliderValue: Months</strong>
+        </div>
+        <div class="payment-type">
+            <br>                       
+            <br>
+            <button class="btn-pay">
+                Finance Car
+            </button>
+            
+        </div>                
     </div>
 }
 
 
 @code {
     List<CartItem> cartItems = new List<CartItem>();
+    private decimal totalPrice;
 
     protected override async Task OnInitializedAsync()
     {
         cartItems = await CartService.GetCartItems();
+        CalculateTotalPrice();
     }
 
     private async Task DeleteItem(CartItem item){
         await CartService.DeleteItem(item);
         cartItems = await CartService.GetCartItems();
+        ToastService.ShowError(item.CarTitle + " has been removed from the cart");
+        CalculateTotalPrice();
     }
+
+    //setting the default sliderValue - this is set to be equal to 1 year
+    private string sliderValue = "12";       
+
+    //function to present the value from the slider and to update the number on the page
+    private void UpdateSliderValue(ChangeEventArgs x)
+    {
+        sliderValue = x.Value.ToString();
+    }
+
+    private void CalculateTotalPrice(){
+        totalPrice = cartItems.Sum(item => item.Price);
+    }
+
+    //private void FinanceTotalPrice(){
+    // 
+    // }
 }

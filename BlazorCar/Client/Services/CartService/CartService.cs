@@ -110,12 +110,14 @@ namespace BlazorCar.Client.Services.CartService
             OnChange.Invoke();
         }
 
+        //function to clear the cart
         public async Task clearCart()
         {
             //getting the list from localstorage
             var cart = await _localStorage.GetItemAsync<List<CarVariant>>("cart");
             cart.Clear();
             await _localStorage.RemoveItemAsync("cart");
+            _toastService.ShowSuccess("Transaction request has been sent!");
             OnChange.Invoke();
         }
     }

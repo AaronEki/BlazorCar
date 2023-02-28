@@ -3,14 +3,14 @@
     padding: 6px;
 }
 
-.item-image-wrapper{
-    width: 150px;
+.item-image-wrapper {
+    width: 225px;
     text-align: center;
 }
 
 .item-image{
-    max-height: 150px;
-    max-width: 150px;
+    max-height: 225px;
+    max-width: 225px;
     padding: 6px;
 }
 

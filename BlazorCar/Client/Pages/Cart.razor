@@ -2,7 +2,6 @@
 @inject ICartService CartService
 @inject IToastService ToastService
 
-@inject IJSRuntime jsRuntime
 
 <h3>Payment Cart</h3>
 
@@ -37,20 +36,23 @@ else{
         </div>
         <div class="payment-type">
             <br>
-            <button class="btn-pay">
-                Pay in Cash
-            </button>
+            <a href="find-dealership">
+                <button class="btn-pay">
+                    Pay in Cash
+                </button>
+            </a>
         </div>
         <b><hr><hr></b>
         <div>
-            <h3>Finance Details</h3>            
+            <h3>Alternatively - Finance the Vehicle</h3>            
             <p>
-                If you wish to finance the vehicle over a period of time - use the slider below to select the duration of the finance:
+                If you wish to finance the vehicle over a period of time (months) - use the slider below to select the duration of the finance. 
+                Please note that the shortest duration of time to finance is 6 months, and the longest duration is 48 months (4 years).
             </p>
             <div class="slide-container">
-                <input type="range" min="6" max="48" class="slider" id="myRange" @bind-value:event="oninput" @bind-value="@sliderValue">
+                <input type="range" min="6" max="48" class="slider" id="myRange" @oninput="UpdateSliderValue" @bind-value="@sliderValue">
             </div>
-            <strong class="Months">@sliderValue: Months</strong>
+            <strong class="Months">Finance for a duration of @sliderValue months at £@financePrice per month</strong>
         </div>
         <div class="payment-type">
             <br>                       
@@ -66,35 +68,59 @@ else{
 
 @code {
     List<CartItem> cartItems = new List<CartItem>();
+
+    //declaring 3 variables for use on the page: totalPrice to display the price of the car in the cart
     private decimal totalPrice;
-
-    protected override async Task OnInitializedAsync()
-    {
-        cartItems = await CartService.GetCartItems();
-        CalculateTotalPrice();
-    }
-
-    private async Task DeleteItem(CartItem item){
-        await CartService.DeleteItem(item);
-        cartItems = await CartService.GetCartItems();
-        ToastService.ShowError(item.CarTitle + " has been removed from the cart");
-        CalculateTotalPrice();
-    }
+    //financePrice to calculate the price of the car when the totalPrice is divided by the sliderValue (months of finance)
+    private decimal financePrice;
+    //setting the finance instrest rate to be 5%
+    private decimal intrest = 1.05m;
 
     //setting the default sliderValue - this is set to be equal to 1 year
-    private string sliderValue = "12";       
+    private string sliderValue = "12";
+
+    //the functions that should be carried out when the page is initialised / loaded are declared in this function
+    protected override async Task OnInitializedAsync()
+    {
+        //populating a list with the current item in the cart
+        cartItems = await CartService.GetCartItems();
+        //the totalprice of the cart by adding up the values of the cart items (there should only be 1 item in the cart however this is a just in case)
+        //it will only change the value when there is more than 1 car in the cart - to avoid underpayment
+        CalculateTotalPrice();
+        //calculate the rate at which the car in the basket should be charged monthly for the finance option
+        financeMonthly();
+    }
+
+    //function to be called when the delete item button is pressed
+    private async Task DeleteItem(CartItem item){
+        //removing the item from the list of items
+        await CartService.DeleteItem(item);
+        cartItems = await CartService.GetCartItems();
+        //adding a poopup notification to say the car has been removed from the cart
+        ToastService.ShowError(item.CarTitle + " has been removed from the cart");
+        //recalculate the totalprice
+        CalculateTotalPrice();        
+    }  
+
+    // function to calculate the monthly cost for the finance option
+    private void financeMonthly(){       
+        //monthly cost is equal to the totalPrice divided by the number of months - then that value is multiplied by the intrest value
+        financePrice = (totalPrice / int.Parse(sliderValue) * intrest);
+        //the value is then rounded to 2 decimal places 
+        financePrice = Math.Round(financePrice, 2);
+    }
+
 
     //function to present the value from the slider and to update the number on the page
     private void UpdateSliderValue(ChangeEventArgs x)
     {
+        //changing the value of the slider and recalculating the monthly cost when the slider is dragged across
         sliderValue = x.Value.ToString();
+        financeMonthly();
     }
 
+    //function to calculate the total price - when an item is removed from the basket the cost should update
     private void CalculateTotalPrice(){
         totalPrice = cartItems.Sum(item => item.Price);
     }
-
-    //private void FinanceTotalPrice(){
-    // 
-    // }
 }

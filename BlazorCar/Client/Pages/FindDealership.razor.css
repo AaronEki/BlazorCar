@@ -1,0 +1,10 @@
+﻿.map-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+}
+
+.map {
+    max-height: 750px;
+    max-width: 750px;
+}

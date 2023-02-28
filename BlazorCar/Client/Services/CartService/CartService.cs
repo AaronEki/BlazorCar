@@ -1,4 +1,5 @@
-﻿using BlazorCar.Client.Services.CarService;
+﻿using BlazorCar.Client.Pages;
+using BlazorCar.Client.Services.CarService;
 using BlazorCar.Shared;
 using Blazored.LocalStorage;
 using Blazored.Toast.Services;
@@ -106,6 +107,15 @@ namespace BlazorCar.Client.Services.CartService
             cart.Remove(cartItem);
             //we then update the cart list and update the page
             await _localStorage.SetItemAsync("cart", cart);
+            OnChange.Invoke();
+        }
+
+        public async Task clearCart()
+        {
+            //getting the list from localstorage
+            var cart = await _localStorage.GetItemAsync<List<CarVariant>>("cart");
+            cart.Clear();
+            await _localStorage.RemoveItemAsync("cart");
             OnChange.Invoke();
         }
     }

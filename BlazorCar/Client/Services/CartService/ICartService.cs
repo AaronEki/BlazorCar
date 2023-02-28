@@ -8,5 +8,7 @@ namespace BlazorCar.Client.Services.CartService
         Task AddToCart(CarVariant carVariant);
         Task<List<CartItem>> GetCartItems();
         Task DeleteItem(CartItem item);
+
+        Task clearCart();
     }
 }

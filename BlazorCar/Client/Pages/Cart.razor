@@ -37,7 +37,7 @@ else{
         <div class="payment-type">
             <br>
             <a href="find-dealership">
-                <button class="btn-pay">
+                <button class="btn-pay" @onclick="() => CartService.clearCart()">
                     Pay in Cash
                 </button>
             </a>

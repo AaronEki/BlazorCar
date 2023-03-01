@@ -1,12 +1,23 @@
-﻿@inject ISyncLocalStorageService LocalStorage
+﻿@using BlazorCar.Client.Authentication
+@inject ISyncLocalStorageService LocalStorage
 @inject ICartService CartService
 @implements IDisposable
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
 
 <a href="cart" class="btn btn-info">
     <i class="oi oi-cart"></i>
     Cart
-    <span class="badge badge-pill badge-light">@GetCarCount()</span>
+    <span class="badge badge-pill badge-light">@GetCarCount()</span>    
 </a>
+<AuthorizeView>
+    <Authorized>
+        <a @onclick="Logout" href="javascript::void(0)">Logout</a>
+    </Authorized>
+    <NotAuthorized>
+        <a href="/login">Login</a>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     protected override void OnInitialized()
@@ -21,5 +32,11 @@
     private int GetCarCount(){
         var cart = LocalStorage.GetItem<List<CarVariant>>("cart");
         return cart != null ? cart.Count : 0;
+    }
+
+    private async Task Logout(){
+        var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(null);
+        navManager.NavigateTo("/", true);
     }
 }

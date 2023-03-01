@@ -1,10 +1,38 @@
 ﻿.map-container {
+    display: flex;
+    gap: 10px;
+}
+
+.map {
+    flex: 1;
+    max-height: 750px;
+    max-width: 750px;
+}
+
+.map-text {
+    
+}
+
+
+.map-text-grid{
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 20px;
 }
 
-.map {
-    max-height: 750px;
-    max-width: 750px;
+/* adding support for mobile users by making divs go into a column when the page is shrunk horizontally */
+@media (max-width: 1023.98px) {
+    .map-container {
+        flex-direction: column;
+    }
+
+    .map {
+        max-height: 400px;
+        max-width: 400px;
+    }
+
+    .map-text-grid {
+        display: grid;        
+        grid-gap: 20px;
+    }
 }

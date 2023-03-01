@@ -15,12 +15,10 @@
                 <a href="/car/@car.Id">
                     <h4 class="mb-0">@car.Title</h4>    
                 </a>
-                <p>@car.Description</p>
-                @if(car.OriginalPrice > car.Price)
-                {
-                    <h6 class="text-muted original-price">£@car.OriginalPrice</h6>
-                }
-                <h5 class="price">£@car.Price</h5>
+                <p>@car.Description</p>                
+                <h5 class="price">
+                    @GetPriceText(car)
+                </h5>
             </div>
         </li>
     }
@@ -40,5 +38,17 @@
     public void Dispose()
     {
         CarService.OnChange -= StateHasChanged;
+    }
+
+    private string GetPriceText(Car car){
+        var variants = car.Variants;
+        if(variants.Count==0){
+            return string.Empty;
+        }
+        else if(variants.Count == 1){
+            return $"£{variants[0].Price}";
+        }
+        decimal minPrice = variants.Min(v => v.Price);
+        return $"£{minPrice}";
     }
 }

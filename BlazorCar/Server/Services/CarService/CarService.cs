@@ -22,13 +22,13 @@ namespace BlazorCar.Server.Services.CarService
         //gets all cars from the database and returns a list of these cars
         public async Task<List<Car>> GetAllCars()
         {
-            return await _context.Cars.ToListAsync();
+            return await _context.Cars.Include(c => c.Variants).ToListAsync();
         }
 
         //gets a single car with the id specified 
         public async Task<Car> GetCar(int id)
         {
-            Car car = await _context.Cars.Include(c => c.Editions).FirstOrDefaultAsync(c => c.Id == id);
+            Car car = await _context.Cars.Include(c => c.Variants).ThenInclude(v => v.Edition).FirstOrDefaultAsync(c => c.Id == id);
             return car;
         }
 
@@ -36,7 +36,7 @@ namespace BlazorCar.Server.Services.CarService
         public async Task<List<Car>> GetCarsByCategory(string categoryUrl)
         {
             Category category = await _categoryService.GetCategoryByUrl(categoryUrl);
-            return await _context.Cars.Where(c => c.CategoryId == category.Id).ToListAsync();
+            return await _context.Cars.Include(c => c.Variants).Where(c => c.CategoryId == category.Id).ToListAsync();
         }
         
     }

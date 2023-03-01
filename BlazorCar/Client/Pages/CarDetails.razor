@@ -1,5 +1,8 @@
 ﻿@page "/car/{id:int}"
 @inject ICarService CarService
+@inject ICartService CartService
+@inject ILocalStorageService LocalStorage
+@inject IToastService ToastService
 
 <div class="media-details">
     <div class="media-img-wrapper-large mr-2">
@@ -52,31 +55,36 @@
                 </strong>
             </div>
         </div>
-        @if(car.Editions != null && car.Editions.Count >0){
+        @if(car.Variants != null && car.Variants.Count > 0){
             <br /><br />
             <strong>Car Warranty</strong>
             <div class="form-group">
-                <select class="form control">
-                    @foreach (var edition in car.Editions){
-                        <option>@edition.Name</option>
+                <select class="form control" @bind="currentEditionId">
+                    @foreach (var variant in car.Variants){
+                        <option value="@variant.EditionId">@variant.Edition.Name</option>
                     }
                 </select>
             </div>
 
         }
-        @if(car.OriginalPrice > car.Price)
+        @if (GetSelectedVariant() != null)
         {
-            <br>
-            <h6 class="text-muted original-price">£@car.OriginalPrice</h6>
+            @if (GetSelectedVariant().OriginalPrice > GetSelectedVariant().Price)
+            {
+                <br>
+                <h6 class="text-muted original-price">£@GetSelectedVariant().OriginalPrice</h6>
+            }
+            <br />
+            <h4 class="price">£@GetSelectedVariant().Price</h4>
         }
-        <br />
-        <h4 class="price">£@car.Price</h4>
-        <button class="btn btn-primary"><i class="oi oi-cart"></i>&nbsp;&nbsp;&nbsp;Add to Cart</button>
+        <button class="btn btn-primary" @onclick="AddToCart"><i class="oi oi-cart"></i>&nbsp;&nbsp;&nbsp;Add to Cart</button>
     </div>
 </div>
 
 @code {
     private Car car = new Car();
+
+    private int currentEditionId = 1;
 
     // getting the Id parameter for use  in the @page directive
     [Parameter]
@@ -86,6 +94,15 @@
     // with this we can display the details of the specific car clicked by the user
     protected override async Task OnInitializedAsync()
     {
-        car = await CarService.GetCar(Id);
+        car = await CarService.GetCar(Id);        
+    }
+
+    private CarVariant GetSelectedVariant(){
+        var variant = car.Variants.FirstOrDefault(v => v.EditionId == currentEditionId);
+        return variant;
+    }
+
+    private async Task AddToCart(){
+        await CartService.AddToCart(GetSelectedVariant());
     }
 }

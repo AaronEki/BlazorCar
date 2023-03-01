@@ -4,6 +4,7 @@ using BlazorCar.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorCar.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230225180206_CarVariants")]
+    partial class CarVariants
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -318,8 +321,8 @@ namespace BlazorCar.Server.Migrations
                         {
                             CarId = 2,
                             EditionId = 1,
-                            OriginalPrice = 25250m,
-                            Price = 25000m
+                            OriginalPrice = 5250m,
+                            Price = 5000m
                         },
                         new
                         {
@@ -416,8 +419,8 @@ namespace BlazorCar.Server.Migrations
                         {
                             CarId = 7,
                             EditionId = 1,
-                            OriginalPrice = 47500m,
-                            Price = 47000m
+                            OriginalPrice = 7500m,
+                            Price = 7000m
                         },
                         new
                         {

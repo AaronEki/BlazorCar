@@ -20,6 +20,9 @@ namespace BlazorCar.Server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CarVariant>().HasKey( c => new { c.CarId, c.EditionId });
+
+
             //Building our categories in the database - with the data provied in the HasData funciton
             //this will create the categories listed here in the database
             modelBuilder.Entity<Category>().HasData(
@@ -44,8 +47,6 @@ namespace BlazorCar.Server.Data
                     Bodystyle = "Hatchback",
                     Colour = "Rebel Blue",
                     Doors = "5",
-                    Price = 12579,
-                    OriginalPrice = 13000,
                     DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
@@ -61,8 +62,6 @@ namespace BlazorCar.Server.Data
                     Bodystyle = "Hatchback",
                     Colour = "Panda",
                     Doors = "3",
-                    Price = 26000,
-                    OriginalPrice = 29000,
                     DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
@@ -78,8 +77,6 @@ namespace BlazorCar.Server.Data
                     Bodystyle = "Hatchback",
                     Colour = "Blaze Red",
                     Doors = "3",
-                    Price = 5325,
-                    OriginalPrice = 5330,
                     DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
@@ -95,8 +92,6 @@ namespace BlazorCar.Server.Data
                     Bodystyle = "Estate",
                     Colour = "Corrida Red",
                     Doors = "5",
-                    Price = 10650,
-                    OriginalPrice = 10650,
                     DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
@@ -112,8 +107,6 @@ namespace BlazorCar.Server.Data
                     Bodystyle = "Estate",
                     Colour = "Black",
                     Doors = "5",
-                    Price = 43500,
-                    OriginalPrice = 44000,
                     DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
@@ -129,8 +122,6 @@ namespace BlazorCar.Server.Data
                     Bodystyle = "Hatchback",
                     Colour = "Black",
                     Doors = "3",
-                    Price = 7000,
-                    OriginalPrice = 8000,
                     DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
@@ -146,8 +137,6 @@ namespace BlazorCar.Server.Data
                     Bodystyle = "SUV",
                     Colour = "Grey",
                     Doors = "5",
-                    Price = 41990,
-                    OriginalPrice = 41990,
                     DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
@@ -163,8 +152,6 @@ namespace BlazorCar.Server.Data
                     Bodystyle = "Coupe",
                     Colour = "Grey",
                     Doors = "3",
-                    Price = 39460,
-                    OriginalPrice = 39460,
                     DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
@@ -180,8 +167,6 @@ namespace BlazorCar.Server.Data
                     Bodystyle = "Coupe",
                     Colour = "Grey",
                     Doors = "3",
-                    Price = 123400,
-                    OriginalPrice = 123400,
                     DateCreated = new DateTime(2023, 1, 1)
                 },
                 new Car
@@ -197,8 +182,6 @@ namespace BlazorCar.Server.Data
                     Bodystyle = "Coupe",
                     Colour = "Red",
                     Doors = "3",
-                    Price = 84000,
-                    OriginalPrice = 86000,
                     DateCreated = new DateTime(2023, 1, 1)
                 }
                 );
@@ -210,49 +193,194 @@ namespace BlazorCar.Server.Data
                     new Edition { Id = 4, Name = "12 Month Warranty" }
                 );
 
-            modelBuilder.SharedTypeEntity<Dictionary<string, object>>("CarEdition").HasData(                    
-                    new { EditionsId = 1, CarsId = 1 },
-                    new { EditionsId = 2, CarsId = 1 },
-                    new { EditionsId = 3, CarsId = 1 },
-                    new { EditionsId = 4, CarsId = 1 },
-
-                    new { EditionsId = 1, CarsId = 2 },
-
-                    new { EditionsId = 1, CarsId = 3 },
-                    new { EditionsId = 2, CarsId = 3 },
-                    new { EditionsId = 3, CarsId = 3 },
-                    new { EditionsId = 4, CarsId = 3 },
-
-                    new { EditionsId = 1, CarsId = 4 },
-                    new { EditionsId = 2, CarsId = 4 },
-                    new { EditionsId = 3, CarsId = 4 },
-                    new { EditionsId = 4, CarsId = 4 },
-
-                    new { EditionsId = 1, CarsId = 5 },
-                    new { EditionsId = 2, CarsId = 5 },
-                    new { EditionsId = 3, CarsId = 5 },
-                    new { EditionsId = 4, CarsId = 5 },
-
-                    new { EditionsId = 1, CarsId = 6 },
-                    new { EditionsId = 2, CarsId = 6 },
-                    new { EditionsId = 3, CarsId = 6 },
-                    new { EditionsId = 4, CarsId = 6 },
-
-                    new { EditionsId = 1, CarsId = 7 },
-                    new { EditionsId = 2, CarsId = 7 },
-                    new { EditionsId = 3, CarsId = 7 },
-                    new { EditionsId = 4, CarsId = 7 },
-
-                    new { EditionsId = 1, CarsId = 8 },
-
-                    new { EditionsId = 1, CarsId = 9 },
-                    new { EditionsId = 2, CarsId = 9 },
-
-                    new { EditionsId = 1, CarsId = 10 },
-                    new { EditionsId = 2, CarsId = 10 },
-                    new { EditionsId = 3, CarsId = 10 },
-                    new { EditionsId = 4, CarsId = 10 }
+            modelBuilder.Entity<CarVariant>().HasData(
+                    // car 1
+                    new CarVariant 
+                    { 
+                        CarId = 1,
+                        EditionId = 1,
+                        Price = 12599,
+                        OriginalPrice = 12750,
+                    },
+                    new CarVariant
+                    {
+                        CarId = 1,
+                        EditionId = 2,
+                        Price = 12749,
+                        OriginalPrice = 12999,
+                    },
+                    new CarVariant
+                    {
+                        CarId = 1,
+                        EditionId = 3,
+                        Price = 12899,
+                        OriginalPrice = 13149,
+                    },
+                    new CarVariant
+                    {
+                        CarId = 1,
+                        EditionId = 4,
+                        Price = 13049,
+                        OriginalPrice = 13299,
+                    },
+                    // car 2
+                    new CarVariant
+                    {
+                        CarId = 2,
+                        EditionId = 1,
+                        Price = 25000,
+                        OriginalPrice = 25250,
+                    },
+                    // car 3
+                    new CarVariant
+                    {
+                        CarId = 3,
+                        EditionId = 1,
+                        Price = 5150,
+                        OriginalPrice = 5400,
+                    },
+                    new CarVariant
+                    {
+                        CarId = 3,
+                        EditionId = 2,
+                        Price = 5300,
+                        OriginalPrice = 5550,
+                    },
+                    new CarVariant
+                    {
+                        CarId = 3,
+                        EditionId = 3,
+                        Price = 5450,
+                        OriginalPrice = 5700,
+                    },
+                    new CarVariant
+                    {
+                        CarId = 3,
+                        EditionId = 4,
+                        Price = 5600,
+                        OriginalPrice = 5850,
+                    },
+                    // car 4
+                    new CarVariant
+                    {
+                        CarId = 4,
+                        EditionId = 1,
+                        Price = 9000,
+                        OriginalPrice = 9000,
+                    },
+                    new CarVariant
+                    {
+                        CarId = 4,
+                        EditionId = 2,
+                        Price = 9150,
+                        OriginalPrice = 9150,
+                    },
+                    new CarVariant
+                    {
+                        CarId = 4,
+                        EditionId = 3,
+                        Price = 9300,
+                        OriginalPrice = 9300,
+                    },
+                    new CarVariant
+                    {
+                        CarId = 4,
+                        EditionId = 4,
+                        Price = 9450,
+                        OriginalPrice = 9450,
+                    },
+                    // car 5
+                    new CarVariant
+                    {
+                        CarId = 5,
+                        EditionId = 1,
+                        Price = 43500,
+                        OriginalPrice = 43500,
+                    },
+                    new CarVariant
+                    {
+                        CarId = 5,
+                        EditionId = 2,
+                        Price = 43650,
+                        OriginalPrice = 43650,
+                    },
+                    new CarVariant
+                    {
+                        CarId = 5,
+                        EditionId = 3,
+                        Price = 43800,
+                        OriginalPrice = 43800,
+                    },
+                    new CarVariant
+                    {
+                        CarId = 5,
+                        EditionId = 4,
+                        Price = 43950,
+                        OriginalPrice = 43950,
+                    },
+                    // car 6
+                    new CarVariant
+                    {
+                        CarId = 6,
+                        EditionId = 1,
+                        Price = 7000,
+                        OriginalPrice = 7500,
+                    },
+                    // car 7
+                    new CarVariant
+                    {
+                        CarId = 7,
+                        EditionId = 1,
+                        Price = 47000,
+                        OriginalPrice = 47500,
+                    },
+                    // car 8
+                    new CarVariant
+                    {
+                        CarId = 8,
+                        EditionId = 1,
+                        Price = 39500,
+                        OriginalPrice = 39600,
+                    },
+                    // car 9
+                    new CarVariant
+                    {
+                        CarId = 9,
+                        EditionId = 1,
+                        Price = 125000,
+                        OriginalPrice = 125000,
+                    },
+                    new CarVariant
+                    {
+                        CarId = 9,
+                        EditionId = 2,
+                        Price = 126000,
+                        OriginalPrice = 126000,
+                    },
+                    new CarVariant
+                    {
+                        CarId = 9,
+                        EditionId = 3,
+                        Price = 127000,
+                        OriginalPrice = 127000,
+                    },
+                    //car 10
+                    new CarVariant
+                    {
+                        CarId = 10,
+                        EditionId = 1,
+                        Price = 87000,
+                        OriginalPrice = 87000,
+                    },
+                    new CarVariant
+                    {
+                        CarId = 10,
+                        EditionId = 4,
+                        Price = 90000,
+                        OriginalPrice = 90000,
+                    }
                 );
+            
         }
     }
 }

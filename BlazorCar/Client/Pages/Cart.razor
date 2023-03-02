@@ -1,7 +1,9 @@
 ﻿@page "/cart"
 @inject ICartService CartService
 @inject IToastService ToastService
-
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@using System.Globalization;
 
 <h3>Payment Cart</h3>
 
@@ -57,9 +59,9 @@ else{
         <div class="payment-type">
             <br>                       
             <br>
-            <button class="btn-pay">
+            <button class="btn-pay" @onclick="NavToFinance">
                 Finance Car
-            </button>
+            </button>            
             
         </div>                
     </div>
@@ -122,5 +124,18 @@ else{
     //function to calculate the total price - when an item is removed from the basket the cost should update
     private void CalculateTotalPrice(){
         totalPrice = cartItems.Sum(item => item.Price);
+    }
+
+    //creating a function to move the user from the cart page to the finance page
+    private async Task NavToFinance(){
+        //creating a financePriceString variable to change the current decimal financePrice to a string with 2dp
+        //specified by "0.00" this is because the NavigationManager is expecting a value of type string
+        string financePriceString = financePrice.ToString("0.00", CultureInfo.InvariantCulture);
+        //navigating the user to the finance page - while passing the variable as a query string parameter - allowing us
+        //to use the variable on the next page
+        var uri = NavigationManager.ToAbsoluteUri($"/finance?financePrice={financePriceString}");
+        await JSRuntime.InvokeVoidAsync("open", uri.ToString(), "_self");
+        //clearing the cart as the car should not linger in the cart when the user has chosen to finance the car
+        await CartService.clearCart();
     }
 }

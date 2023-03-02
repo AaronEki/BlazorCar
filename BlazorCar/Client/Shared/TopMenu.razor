@@ -5,17 +5,27 @@
 @inject AuthenticationStateProvider authStateProvider
 @inject NavigationManager navManager
 
-<a href="cart" class="btn btn-info">
-    <i class="oi oi-cart"></i>
-    Cart
-    <span class="badge badge-pill badge-light">@GetCarCount()</span>    
-</a>
+@*making it so only an authorised (logged in) user can access the cart - by making the cart button only visible to an authorised user*@
 <AuthorizeView>
     <Authorized>
-        <a @onclick="Logout" href="javascript::void(0)">Logout</a>
+        <a href="cart" class="btn btn-info">
+            <i class="oi oi-cart"></i>
+            Cart
+            <span class="badge badge-pill badge-light">@GetCarCount()</span>
+        </a>
+    </Authorized>    
+</AuthorizeView>
+
+<AuthorizeView>
+    <Authorized>
+        <a @onclick="Logout" href="javascript::void(0)" class="btn btn-info">
+            Logout
+        </a>
     </Authorized>
     <NotAuthorized>
-        <a href="/login">Login</a>
+        <a href="/login" class="btn btn-info">
+            Login
+        </a>
     </NotAuthorized>
 </AuthorizeView>
 

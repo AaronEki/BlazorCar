@@ -3,6 +3,7 @@ using BlazorCar.Client.Services.CarService;
 using BlazorCar.Shared;
 using Blazored.LocalStorage;
 using Blazored.Toast.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 using System.Diagnostics.Contracts;
 
 namespace BlazorCar.Client.Services.CartService
@@ -14,35 +15,54 @@ namespace BlazorCar.Client.Services.CartService
         private readonly IToastService _toastService;
         private readonly ICarService _carService;
 
+        //These 2 private fields are used to check if the user is authenticated (logged in)
+        private readonly HttpClient _httpClient;
+        private readonly AuthenticationStateProvider _authStateProvider;
+
         //declaring the OnChange event
         public event Action OnChange;
 
         //assigning the parameters to the services
-        public CartService(ILocalStorageService localStorage, IToastService toastService, ICarService carService)
+        public CartService(ILocalStorageService localStorage, IToastService toastService, ICarService carService,
+            HttpClient httpClient, AuthenticationStateProvider authStateProvider)
         {
             _localStorage = localStorage;
             _toastService = toastService;
             _carService = carService;
-        }
+            _httpClient = httpClient;
+            _authStateProvider = authStateProvider;
+        }            
 
-        
         //declaring the AddToCart function
         public async Task AddToCart(CarVariant carVariant)
         {
+            var authState = await _authStateProvider.GetAuthenticationStateAsync();
             //populating a list cart with the items in the cart list in localstorage
             var cart = await _localStorage.GetItemAsync<List<CarVariant>>("cart");
-            //if the cart is empty then create a new empty cart list of CarVariants
-            if (cart == null)
-            {
-                cart = new List<CarVariant>();
+
+            //If the user is logged in - we will continue and add the car to the payment cart
+            //However if the user is not logged in we will 
+            if (authState.User.Identity.IsAuthenticated)
+            {                
+                //if the cart is empty then create a new empty cart list of CarVariants
+                if (cart == null)
+                {
+                    cart = new List<CarVariant>();
+                }
+                // if the number of cars in the cart is greater than 0 - then we will show an error and return from the function
+                // there should only be 1 car per transaction
+                else if (cart.Count > 0)
+                {
+                    _toastService.ShowError("There is already a car in the payment cart, complete the transaction or remove the car before adding another car to the cart");
+                    return;
+                }
             }
-            // if the number of cars in the cart is greater than 0 - then we will show an error and return from the function
-            // there should only be 1 car per transaction
-            else if (cart.Count > 0)
+            else
             {
-                _toastService.ShowError("There is already a car in the payment cart, complete the transaction or remove the car before adding another car to the cart");
+                _toastService.ShowError("Please login before adding an item to the cart!");
                 return;
             }
+            
             // we add the carVariant to the list of cars
             cart.Add(carVariant);
             await _localStorage.SetItemAsync("cart", cart);

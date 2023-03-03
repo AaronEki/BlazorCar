@@ -17,28 +17,27 @@
         </div>
             <div class="mb-3">
                 <label>Forename:</label>
-                <input class="form-control" id="Forename" @bindvalue="customer.Forename" required/>
+                <input class="form-control" id="Forename" @bind-value="customer.Forename" required/>
             </div>
             <div class="mb-3">
                 <label>Surname:</label>
-                <input class="form-control" id="Surname" @bindvalue="customer.Surname" required/>
+                <input class="form-control" id="Surname" @bind-value="customer.Surname" required/>
             </div>
             <div class="mb-3">
                 <label>Email Address:</label>
-                <input class="form-control" id="EmailAddress" @bindvalue="customer.EmailAddress" required/>
+                <input class="form-control" id="EmailAddress" @bind-value="customer.Email" required/>
             </div>
             <div class="mb-3">
                 <label>Phone Number:</label>
-                <input class="form-control" id="PhoneNumber" @bindvalue="customer.PhoneNumber" required/>
+                <input class="form-control" id="PhoneNumber" @bind-value="customer.PhoneNumber" required/>
             </div>
         <div class="mb-3 d-grid gap-2">
-            <button class="btn btn-primary">Submit</button>
+            <button class="btn btn-primary" @onclick="Submit">Submit</button>
         </div>
     </div>
 </div>
 @code {
     private decimal financePrice;
-
     Customer customer = new Customer();
     //parsing the value from the quiery stirng of the URL of the current page - this allos us to store the financePrice calculated
     //on the previous page in a private variable here on the finance page
@@ -47,6 +46,12 @@
         var uri = new Uri(NavigationManager.Uri);
         var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
         financePrice = decimal.Parse(query["financePrice"]);
+    }
+
+    private async Task Submit(){
+        //Customer customer = new Customer();
+        await AddCustomerAsync(customer);
+        
     }
 
     private async Task<bool> AddCustomerAsync(Customer customer)

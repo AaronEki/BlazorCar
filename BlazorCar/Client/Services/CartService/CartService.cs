@@ -1,7 +1,7 @@
 ﻿using BlazorCar.Client.Pages;
 using BlazorCar.Client.Services.CarService;
 using BlazorCar.Shared;
-using Blazored.LocalStorage;
+using Blazored.SessionStorage;
 using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Diagnostics.Contracts;
@@ -11,7 +11,7 @@ namespace BlazorCar.Client.Services.CartService
     public class CartService : ICartService
     {
         //declaring private fields _localStorage, _toastService and _carService
-        private readonly ILocalStorageService _localStorage;
+        private readonly ISessionStorageService _sessionStorage;
         private readonly IToastService _toastService;
         private readonly ICarService _carService;
 
@@ -23,10 +23,10 @@ namespace BlazorCar.Client.Services.CartService
         public event Action OnChange;
 
         //assigning the parameters to the services
-        public CartService(ILocalStorageService localStorage, IToastService toastService, ICarService carService,
+        public CartService(ISessionStorageService localStorage, IToastService toastService, ICarService carService,
             HttpClient httpClient, AuthenticationStateProvider authStateProvider)
         {
-            _localStorage = localStorage;
+            _sessionStorage = localStorage;
             _toastService = toastService;
             _carService = carService;
             _httpClient = httpClient;
@@ -38,7 +38,7 @@ namespace BlazorCar.Client.Services.CartService
         {
             var authState = await _authStateProvider.GetAuthenticationStateAsync();
             //populating a list cart with the items in the cart list in localstorage
-            var cart = await _localStorage.GetItemAsync<List<CarVariant>>("cart");
+            var cart = await _sessionStorage.GetItemAsync<List<CarVariant>>("cart");
 
             //If the user is logged in - we will continue and add the car to the payment cart
             //However if the user is not logged in we will 
@@ -65,7 +65,7 @@ namespace BlazorCar.Client.Services.CartService
             
             // we add the carVariant to the list of cars
             cart.Add(carVariant);
-            await _localStorage.SetItemAsync("cart", cart);
+            await _sessionStorage.SetItemAsync("cart", cart);
             //we use the GetCar method so we can add the correct car to the list
             var car = await _carService.GetCar(carVariant.CarId);
             //showing a success message to the user
@@ -80,7 +80,7 @@ namespace BlazorCar.Client.Services.CartService
             //we are creating a new list result
             var result = new List<CartItem>();
             // taking the items from the localstorage and storing them into cart
-            var cart = await _localStorage.GetItemAsync<List<CarVariant>>("cart");
+            var cart = await _sessionStorage.GetItemAsync<List<CarVariant>>("cart");
 
             //if cart is empty we return an empty list
             if (cart == null)
@@ -116,7 +116,7 @@ namespace BlazorCar.Client.Services.CartService
         public async Task DeleteItem(CartItem item)
         {
             //getting the list from localstorage
-            var cart = await _localStorage.GetItemAsync<List<CarVariant>>("cart");
+            var cart = await _sessionStorage.GetItemAsync<List<CarVariant>>("cart");
             // if the cart is empty we return and exit
             if (cart ==null)
             {
@@ -126,7 +126,7 @@ namespace BlazorCar.Client.Services.CartService
             var cartItem = cart.Find(y => y.CarId == item.CarId && y.EditionId == item.EditionId);
             cart.Remove(cartItem);
             //we then update the cart list and update the page
-            await _localStorage.SetItemAsync("cart", cart);
+            await _sessionStorage.SetItemAsync("cart", cart);
             OnChange.Invoke();
         }
 
@@ -134,9 +134,9 @@ namespace BlazorCar.Client.Services.CartService
         public async Task clearCart()
         {
             //getting the list from localstorage
-            var cart = await _localStorage.GetItemAsync<List<CarVariant>>("cart");
+            var cart = await _sessionStorage.GetItemAsync<List<CarVariant>>("cart");
             cart.Clear();
-            await _localStorage.RemoveItemAsync("cart");
+            await _sessionStorage.RemoveItemAsync("cart");
             _toastService.ShowSuccess("Transaction request has been sent!");
             OnChange.Invoke();
         }

@@ -1,15 +1,45 @@
 ﻿@page "/finance"
 @inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+
+
 <div>
     <h3>Finance Module!</h3>
     <p>
-        The monthly charge for the selected finance plan is <strong>£@financePrice</strong>! Please enter your card details below for us to
+        The monthly charge for the selected finance plan is <strong>£@financePrice</strong>! Please enter your details below for us to
         continue with your financing decision! Please ensure to upload any appropriate documents with the upload section.
     </p>
+</div>
+<div class="row">
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <div class ="mb-3 text-center">
+            <h4>Required Details</h4>
+        </div>
+            <div class="mb-3">
+                <label>Forename:</label>
+                <input class="form-control" id="Forename" @bindvalue="customer.Forename" required/>
+            </div>
+            <div class="mb-3">
+                <label>Surname:</label>
+                <input class="form-control" id="Surname" @bindvalue="customer.Surname" required/>
+            </div>
+            <div class="mb-3">
+                <label>Email Address:</label>
+                <input class="form-control" id="EmailAddress" @bindvalue="customer.EmailAddress" required/>
+            </div>
+            <div class="mb-3">
+                <label>Phone Number:</label>
+                <input class="form-control" id="PhoneNumber" @bindvalue="customer.PhoneNumber" required/>
+            </div>
+        <div class="mb-3 d-grid gap-2">
+            <button class="btn btn-primary">Submit</button>
+        </div>
+    </div>
 </div>
 @code {
     private decimal financePrice;
 
+    Customer customer = new Customer();
     //parsing the value from the quiery stirng of the URL of the current page - this allos us to store the financePrice calculated
     //on the previous page in a private variable here on the finance page
     protected override async Task OnInitializedAsync()
@@ -17,5 +47,11 @@
         var uri = new Uri(NavigationManager.Uri);
         var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
         financePrice = decimal.Parse(query["financePrice"]);
+    }
+
+    private async Task<bool> AddCustomerAsync(Customer customer)
+    {
+        var response = await HttpClient.PostAsJsonAsync("api/customer", customer);
+        return response.IsSuccessStatusCode;
     }
 }

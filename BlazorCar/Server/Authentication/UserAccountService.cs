@@ -11,7 +11,8 @@
             //hardcoding users - in practice this should be done with a seperate database - using salted hashes of the passwords and NOT stored in plaintext
             _userAccountList = new List<UserAccount> {
                 new UserAccount { UserName = "admin", Password = "admin", Role = "Administrator" },
-                new UserAccount { UserName = "user", Password = "user", Role = "user" }
+                new UserAccount { UserName = "user", Password = "user", Role = "user" },
+                new UserAccount { UserName = "user2", Password = "user2", Role = "user" }
             };            
         }
 

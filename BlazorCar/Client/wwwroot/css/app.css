@@ -1,7 +1,8 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    /*using the font Trebuchet MS as it is easily readable but not "default" web font as that is boring*/
+    font-family: 'Trebuchet MS', sans-serif;
 }
 
 h1:focus {

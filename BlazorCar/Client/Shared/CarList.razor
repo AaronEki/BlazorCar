@@ -25,13 +25,10 @@
 </ul>
 
 @code {
-    //[Parameter]
-    //public int? CategoryId { get; set; } = null;
-
+    // carlist functionality heavy based on (PatrickGod, 2020)
     // loading the list of cars from the CarService.cs file 
     protected override void OnInitialized()
-    {
-        //await CarService.LoadCars();
+    {        
         CarService.OnChange += StateHasChanged;
     }
 
@@ -40,6 +37,8 @@
         CarService.OnChange -= StateHasChanged;
     }
 
+    //finding the price of the cheapest variant of the car
+    //if there is no variants then we return empty string - else we will use the cheapest price to display
     private string GetPriceText(Car car){
         var variants = car.Variants;
         if(variants.Count==0){

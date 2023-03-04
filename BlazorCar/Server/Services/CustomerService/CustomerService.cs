@@ -14,15 +14,7 @@ namespace BlazorCar.Server.Services.CustomerService
             _dbContext = dbContext;
         }
         public async Task<bool> AddCustomer(Customer customer)
-        {
-            /*var customer = new Customer
-            {
-                Forename = _Forename,
-                Surname = _Surname,
-                Email = _Email,
-                PhoneNumber = _PhoneNumber
-            };*/
-
+        {          
             try
             {
                 _dbContext.Customers.Add(customer);

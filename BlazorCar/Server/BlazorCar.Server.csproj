@@ -23,5 +23,9 @@
     <ProjectReference Include="..\Shared\BlazorCar.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="uploads\" />
+  </ItemGroup>
+
 
 </Project>

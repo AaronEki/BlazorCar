@@ -1,0 +1,63 @@
+﻿@page "/admin"
+@using System.Net.Http.Json
+@inject HttpClient httpClient
+@attribute [Authorize(Roles = "Administrator")]
+
+<div>
+    <h1>Welcome, Administrator!</h1>
+    <div>
+        <h3>Table of Customers with Actice Finance Request:</h3>
+        @if(customers != null){
+            <table>
+                <tr>
+                    <th>CustomerID</th>
+                    <th>Forename</th>
+                    <th>Surname</th>
+                    <th>Email Address</th>
+                    <th>PhoneNumber</th>
+                </tr>
+                @foreach(var customer in customers){
+                    <tr>
+                        <td>@customer.Id</td>
+                        <td>@customer.Forename</td>
+                        <td>@customer.Surname</td>
+                        <td>@customer.Email</td>
+                        <td>@customer.PhoneNumber</td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+    <div>
+        @*(randomised filenames are recommended in microsoft documentation)*@
+        <h3>Uploaded files:</h3>
+        @if(files != null){
+            <ul>
+            @foreach(var file in files){
+                <li>
+                    @file
+                </li>
+            }
+            </ul>
+        }
+    </div>
+</div>
+
+
+@code {
+    //creating a list of type Customer - to use to display all of the details of the ongoing finances
+    private List<Customer> customers;
+    //list of string (filenames) used to display all of the filenames of the files in uploads folder
+    private List<string> files;
+
+    protected override async Task OnInitializedAsync(){
+        //populating the list of customers with the list revieved from the RetrieveFinanceController 
+        customers = await httpClient.GetFromJsonAsync<List<Customer>>("api/RetrieveFinance");
+
+        //populating the list of filenames with the list revieved from the RetrieveFinanceController on the condition that it is not null
+        var response = await httpClient.GetFromJsonAsync<List<string>>("api/GetUploads");
+        if (response!= null){
+            files = response;
+        }
+    }
+}

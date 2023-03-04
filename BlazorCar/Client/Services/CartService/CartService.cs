@@ -40,6 +40,12 @@ namespace BlazorCar.Client.Services.CartService
             //populating a list cart with the items in the cart list in localstorage
             var cart = await _sessionStorage.GetItemAsync<List<CarVariant>>("cart");
 
+            if (authState.User.IsInRole("Administrator"))
+            {
+                _toastService.ShowError("Admin users cannot add cars to the payment cart!");
+                return;
+            }
+
             //If the user is logged in - we will continue and add the car to the payment cart
             //However if the user is not logged in we will 
             if (authState.User.Identity.IsAuthenticated)
@@ -59,7 +65,7 @@ namespace BlazorCar.Client.Services.CartService
             }
             else
             {
-                _toastService.ShowError("Please login before adding an item to the cart!");
+                _toastService.ShowError("Please login to a user account before adding an item to the cart!");
                 return;
             }
             

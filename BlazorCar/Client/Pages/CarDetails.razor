@@ -1,4 +1,5 @@
 ﻿@page "/car/{id:int}"
+@using System.Security.Claims
 @inject ICarService CarService
 @inject ICartService CartService
 @inject ILocalStorageService LocalStorage
@@ -76,8 +77,8 @@
             }
             <br />
             <h4 class="price">£@GetSelectedVariant().Price</h4>
-        }
-        <button class="btn btn-primary" @onclick="AddToCart"><i class="oi oi-cart"></i>&nbsp;&nbsp;&nbsp;Add to Cart</button>
+        }        
+        <button class="btn btn-primary" @onclick="AddToCart"><i class="oi oi-cart"></i>&nbsp;&nbsp;&nbsp;Add to Cart</button>                
     </div>
 </div>
 
@@ -85,6 +86,10 @@
     private Car car = new Car();
 
     private int currentEditionId = 1;
+
+    private string User;
+
+
 
     // getting the Id parameter for use  in the @page directive
     [Parameter]
@@ -94,8 +99,9 @@
     // with this we can display the details of the specific car clicked by the user
     protected override async Task OnInitializedAsync()
     {
-        car = await CarService.GetCar(Id);        
+        car = await CarService.GetCar(Id);      
     }
+    
 
     private CarVariant GetSelectedVariant(){
         var variant = car.Variants.FirstOrDefault(v => v.EditionId == currentEditionId);

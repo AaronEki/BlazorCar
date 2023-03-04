@@ -6,6 +6,14 @@
 @inject AuthenticationStateProvider authStateProvider
 @inject NavigationManager navManager
 
+<AuthorizeView Roles="Administrator">
+    <Authorized>
+        <a href="/admin" class="btn btn-info">
+            Admin Module
+        </a>
+    </Authorized>    
+</AuthorizeView>
+
 @*making it so only an authorised (logged in) user can access the cart - by making the cart button only visible to an authorised user*@
 <AuthorizeView>
     <Authorized>
@@ -46,7 +54,7 @@
         return cart != null ? cart.Count : 0;
     }
 
-    //utton will change the user authentication state to null 
+    //button will change the user authentication state to null 
     private async Task Logout(){
         var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
         await customAuthStateProvider.UpdateAuthenticationState(null);

@@ -6,8 +6,7 @@ namespace BlazorCar.Server.Services.CustomerService
     public class CustomerService : ICustomerService
     {
         //declaring private field _dbContext as a reference of the DataContext class
-        private readonly DataContext _dbContext;
-        
+        private readonly DataContext _dbContext;        
 
         public CustomerService(DataContext dbContext)
         {
@@ -22,7 +21,6 @@ namespace BlazorCar.Server.Services.CustomerService
 
                 return true;
             }
-
             catch
             {
                 return false;

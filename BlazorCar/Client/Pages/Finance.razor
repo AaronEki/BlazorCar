@@ -1,7 +1,9 @@
 ﻿@page "/finance"
+@using System.Net.Http.Headers
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
 @inject IToastService ToastService
+
 
 
 <div>
@@ -17,6 +19,25 @@
             <h4>Required Details</h4>
         </div>
             <div class="mb-3">
+                <label>Upload Files:</label>
+                <InputFile OnChange="@OnInputFileChange" multiple />
+                @if (fileNames.Count > 0)
+                {
+                    <ul>
+                        @foreach (var fileName in fileNames)
+                        {
+                            <li>
+                                File: @fileName
+                                <br>
+                                <span>
+                                    Stored File Name: @GetStoredFileName(fileName)
+                                </span>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+            <div class="mb-3">
                 <label>Forename:</label>
                 <input class="form-control" id="Forename" @bind-value="customer.Forename" required/>
             </div>
@@ -31,16 +52,30 @@
             <div class="mb-3">
                 <label>Phone Number:</label>
                 <input class="form-control" id="PhoneNumber" @bind-value="customer.PhoneNumber" required/>
-            </div>        
+            </div>          
+            
         <div class="mb-3 d-grid gap-2">
-            <button class="btn btn-primary" @onclick="Submit">Submit</button>
-        </div>        
+            <button class="btn btn-primary" @onclick="Submit">Submit Details</button>
+        </div>  
+        
     </div>
 </div>
 @code {
     private decimal financePrice;
+
+    //For adding a file - a combination of the (Microsoft, 2023) documentation and (PatrickGod, 2022) was used
+    //setting the maximum amount of files and maximum file size and creating a list of fileNames
+    private int maxAllowedFiles = 3;
+    private long maxFileSize = 1024 * 1000;
+    private List<string> fileNames = new();
+    private List<UploadResult> uploadResults = new();
+
+
+
     //declaring the object customer of type Customer (template in Customer.cs)
     Customer customer = new Customer();
+
+
     //parsing the value from the quiery stirng of the URL of the current page - this allos us to store the financePrice calculated
     //on the previous page in a private variable here on the finance page
     protected override async Task OnInitializedAsync()
@@ -76,5 +111,40 @@
         var response = await HttpClient.PostAsJsonAsync("api/customer", customer);
         //returning success or not
         return response.IsSuccessStatusCode;
+    }
+
+    //Further addition - make this submit when the button is clicked, not when the onchange event is called
+    private async Task OnInputFileChange(InputFileChangeEventArgs e){
+        using var content = new MultipartFormDataContent();
+
+        foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+        {
+            var fileContent = new StreamContent(file.OpenReadStream(maxFileSize));
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+
+            fileNames.Add(file.Name);
+            content.Add(
+                content: fileContent,
+                name: "\"files\"",
+                fileName:file.Name);          
+        }
+
+        var response = await HttpClient.PostAsync("/api/File", content);
+        var newUploadResult = await response.Content.ReadFromJsonAsync<List<UploadResult>>();
+        ToastService.ShowSuccess("Your file(s) have been sucessfully uploaded");
+
+        if(newUploadResult != null){
+            uploadResults = uploadResults.Concat(newUploadResult).ToList();
+        }
+
+    }
+
+    private string? GetStoredFileName(string fileName){
+        var uploadResult = uploadResults.SingleOrDefault(f => f.FileName == fileName);
+        if(uploadResult != null){
+            return uploadResult.StoredFileName;
+        }
+
+        return "File not found";
     }
 }

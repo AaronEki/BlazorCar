@@ -1,15 +1,46 @@
 ﻿@page "/finance"
 @inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+@inject IToastService ToastService
+
+
 <div>
     <h3>Finance Module!</h3>
     <p>
-        The monthly charge for the selected finance plan is <strong>£@financePrice</strong>! Please enter your card details below for us to
+        The monthly charge for the selected finance plan is <strong>£@financePrice</strong>! Please enter your details below for us to
         continue with your financing decision! Please ensure to upload any appropriate documents with the upload section.
     </p>
 </div>
+<div class="row">
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <div class ="mb-3 text-center">
+            <h4>Required Details</h4>
+        </div>
+            <div class="mb-3">
+                <label>Forename:</label>
+                <input class="form-control" id="Forename" @bind-value="customer.Forename" required/>
+            </div>
+            <div class="mb-3">
+                <label>Surname:</label>
+                <input class="form-control" id="Surname" @bind-value="customer.Surname" required/>
+            </div>
+            <div class="mb-3">
+                <label>Email Address:</label>
+                <input class="form-control" id="EmailAddress" @bind-value="customer.Email" required/>
+            </div>
+            <div class="mb-3">
+                <label>Phone Number:</label>
+                <input class="form-control" id="PhoneNumber" @bind-value="customer.PhoneNumber" required/>
+            </div>        
+        <div class="mb-3 d-grid gap-2">
+            <button class="btn btn-primary" @onclick="Submit">Submit</button>
+        </div>        
+    </div>
+</div>
 @code {
     private decimal financePrice;
-
+    //declaring the object customer of type Customer (template in Customer.cs)
+    Customer customer = new Customer();
     //parsing the value from the quiery stirng of the URL of the current page - this allos us to store the financePrice calculated
     //on the previous page in a private variable here on the finance page
     protected override async Task OnInitializedAsync()
@@ -17,5 +48,33 @@
         var uri = new Uri(NavigationManager.Uri);
         var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
         financePrice = decimal.Parse(query["financePrice"]);
+    }
+
+    //when the submit button is pressed - the AddCustomerAsync method will be called passing in the parameter (customer)
+    private async Task Submit(){   
+        //if the AddCustomerAsync is successful - we will then show a sucess message and nagivate the user to the ThankYou page
+        if(await AddCustomerAsync(customer) == true){
+            ToastService.ShowSuccess("Your details are being processed. Thank you!");
+            // Navigate to the ThankYou page
+            NavigationManager.NavigateTo("FinanceConfirm");
+        }
+
+        //if it is not successful we will show an error message - and return
+        //error message is simple as thourough validation is yet to be added
+        //further improvement would be to create a validationchecking function which will use different errors depending on what
+        //is invalid
+        else{
+            ToastService.ShowError("There was a problem processing your details");
+            return;
+        }
+    }
+
+    //AddCustomerAsync task (returning bool) 
+    private async Task<bool> AddCustomerAsync(Customer customer)
+    {
+        //sending HTTP POST request to the api/customer -> sending over customer object as JSON
+        var response = await HttpClient.PostAsJsonAsync("api/customer", customer);
+        //returning success or not
+        return response.IsSuccessStatusCode;
     }
 }

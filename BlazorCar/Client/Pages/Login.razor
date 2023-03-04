@@ -26,16 +26,24 @@
 </div>
 
 @code {
+    //(Coding Droplets, 2022) has been used to implement the authentication functionality
+    //creating a new instance of the LoginRequest
     private LoginRequest loginRequest = new LoginRequest();
 
+    //making a function to authenticate the user
     private async Task Authenticate(){
+        //sending the loginRequest as a HTTP POST to the /api/account/login serialised as JSON
         var loginResponse = await httpClient.PostAsJsonAsync<LoginRequest>("/api/account/Login", loginRequest);
+        //if login success (creds match)
         if(loginResponse.IsSuccessStatusCode){
+            //we then will create our userSession and authenticate the user so they are now authenticated - they then will be redirected to index
+            //which is our home page
             var userSession = await loginResponse.Content.ReadFromJsonAsync<UserSession>();
             var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
             await customAuthStateProvider.UpdateAuthenticationState(userSession);
             navManager.NavigateTo("/", forceLoad: true);            
         }
+        //otherwise we will display an error message to the user as their credentials are not valid
         else if(loginResponse.StatusCode == HttpStatusCode.Unauthorized){
             await js.InvokeVoidAsync("alert", "Invalid Username or Password");
             return;

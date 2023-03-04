@@ -2,6 +2,7 @@ using BlazorCar.Server.Authentication;
 using BlazorCar.Server.Data;
 using BlazorCar.Server.Services.CarService;
 using BlazorCar.Server.Services.CategoryService;
+using BlazorCar.Server.Services.CustomerService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICarService, CarService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 //configuring the jwtbearer authentication scheme
 builder.Services.AddAuthentication(o =>

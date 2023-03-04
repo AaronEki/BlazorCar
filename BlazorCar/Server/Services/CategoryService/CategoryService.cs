@@ -2,6 +2,7 @@
 using BlazorCar.Shared;
 using Microsoft.EntityFrameworkCore;
 
+//based on the CategoryService provided by (PatrickGod, 2020)
 namespace BlazorCar.Server.Services.CategoryService
 {
     //This service is used on the server side - this is becasue when you have potentially thousands of cars - you do not want the client to load every single one 

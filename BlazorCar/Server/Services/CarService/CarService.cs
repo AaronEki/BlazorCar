@@ -3,6 +3,7 @@ using BlazorCar.Server.Services.CategoryService;
 using BlazorCar.Shared;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
+//based on the ProductService provided by (PatrickGod, 2020)
 
 namespace BlazorCar.Server.Services.CarService
 {

@@ -1,5 +1,6 @@
 ﻿@using BlazorCar.Client.Authentication
-@inject ISyncLocalStorageService LocalStorage
+@using Blazored.SessionStorage
+@inject ISyncSessionStorageService SessionStorage
 @inject ICartService CartService
 @implements IDisposable
 @inject AuthenticationStateProvider authStateProvider
@@ -39,11 +40,13 @@
         CartService.OnChange -= StateHasChanged;
     }
 
-    private int GetCarCount(){
-        var cart = LocalStorage.GetItem<List<CarVariant>>("cart");
+    private int GetCarCount()
+    {
+        var cart = SessionStorage.GetItem<List<CarVariant>>("cart");
         return cart != null ? cart.Count : 0;
     }
 
+    //utton will change the user authentication state to null 
     private async Task Logout(){
         var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
         await customAuthStateProvider.UpdateAuthenticationState(null);

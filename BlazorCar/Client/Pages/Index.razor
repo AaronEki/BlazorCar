@@ -14,12 +14,6 @@
     </NotAuthorized>
 </AuthorizeView>
 
-@*<AuthorizeView>
-    <Authorized>
-        <br /><br />
-        <button class="btn btn-outline-primary" @onclick="DisplayGreetingAlert">Display Greeting Alert</button>
-    </Authorized>
-</AuthorizeView>*@
 
 @if(category != null)
 {
@@ -35,24 +29,14 @@ else
 
 
 
-@code {
-
-    /*[CascadingParameter]
-    private Task<AuthenticationState> authenticationState { get; set; }
-
-    private async Task DisplayGreetingAlert(){
-        var authState = await authenticationState;
-        var message = $"Hello {authState.User.Identity.Name}";
-        await js.InvokeVoidAsync("alert", message);
-    }*/
-
-
+@code {       
     [Parameter]
     public string CategoryUrl { get; set; }
 
     // initialise the category
     private Category category = null;
 
+    //ensuring that if a category is entered by url we will still load that category
     protected override async Task OnParametersSetAsync()
     {
         await CarService.LoadCars(CategoryUrl);

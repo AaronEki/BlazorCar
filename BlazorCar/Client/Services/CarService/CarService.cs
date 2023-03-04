@@ -15,23 +15,7 @@ namespace BlazorCar.Client.Services.CarService
         public CarService(HttpClient http) { 
             _http = http; 
         }
-
-        // loading a list of cars from the server using HTTPGET request
-        // categoryUrl is used to filter the list of cars by their categoryId
-        /*public async Task LoadCars(string categoryUrl = null)
-        {
-            //if we are not providing a specific categoryUrl - we will retrieve all of the cars from the server
-            if (categoryUrl == null)
-            {
-                Cars = await _http.GetFromJsonAsync<List<Car>>($"api/Car");
-            }
-            //if we do provide a specific categoryUrl - retrieve the cars that are in that category
-            else
-            {
-                Cars = await _http.GetFromJsonAsync<List<Car>>($"api/Car/Category/{categoryUrl}");
-            }            
-            OnChange.Invoke();
-        }*/
+        
         public async Task LoadCars(string categoryUrl = null)
         {
             if (categoryUrl == null)

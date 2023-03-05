@@ -21,7 +21,7 @@ namespace BlazorCar.Server.Controllers
         public async Task<ActionResult> AddCustomer(Customer customer)
         {
             //setting result to be the return value of the AddCustomer method when supplied the parameter customer
-            var result = await _customerService.AddCustomer(customer);
+            bool result = await _customerService.AddCustomer(customer);
 
             //if not sucessful return this statuscode
             if(result == false)

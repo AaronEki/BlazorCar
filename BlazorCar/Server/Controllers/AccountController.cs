@@ -20,13 +20,16 @@ namespace BlazorCar.Server.Controllers
         [HttpPost]
         [Route("Login")]
         [AllowAnonymous]
-        //[Authorise(Roles = "Administrator")] to make something admin only
+        
 
         public ActionResult<UserSession> Login([FromBody] LoginRequest loginRequest)
         {
+            //creating a new instance of the JwtAuthenticationManager class
             var jwtAuthenticationManager = new JwtAuthenticationManager(_userAccountService);
+            //getting the generated token for the user with the username and password specified
             var userSession = jwtAuthenticationManager.GenerateJwtToken(loginRequest.UserName, loginRequest.Password);
 
+            //if the uname or pword was invalid then we will not authorise - if valid we do
             if (userSession is null)
             {
                 return Unauthorized();

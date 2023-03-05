@@ -1,5 +1,6 @@
 ﻿@page "/finance"
 @using System.Net.Http.Headers
+@using System.Linq
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
 @inject IToastService ToastService
@@ -51,7 +52,7 @@
             </div>
             <div class="mb-3">
                 <label>Phone Number:</label>
-                <input class="form-control" id="PhoneNumber" @bind-value="customer.PhoneNumber" required/>
+                <input class="form-control" id="PhoneNumber" @bind-value="customer.PhoneNumber" required/>                           
             </div>          
             
         <div class="mb-3 d-grid gap-2">
@@ -65,9 +66,10 @@
 
     //For adding a file - a combination of the (Microsoft, 2023) documentation and (PatrickGod, 2022) was used
     //setting the maximum amount of files and maximum file size and creating a list of fileNames
-    private int maxAllowedFiles = 3;
+    private int maxAllowedFiles = 1;
     private long maxFileSize = 1024 * 1000;
     private List<string> fileNames = new();
+    private string SingleName;
     private List<UploadResult> uploadResults = new();
 
 
@@ -88,10 +90,10 @@
     //when the submit button is pressed - the AddCustomerAsync method will be called passing in the parameter (customer)
     private async Task Submit(){   
         //if the AddCustomerAsync is successful - we will then show a sucess message and nagivate the user to the ThankYou page
-        if(await AddCustomerAsync(customer) == true){
+        if(await AddCustomerAsync(customer) == true){            
             ToastService.ShowSuccess("Your details are being processed. Thank you!");
             // Navigate to the ThankYou page
-            NavigationManager.NavigateTo("FinanceConfirm");
+            NavigationManager.NavigateTo("FinanceConfirm");          
         }
 
         //if it is not successful we will show an error message - and return
@@ -107,6 +109,7 @@
     //AddCustomerAsync task (returning bool) 
     private async Task<bool> AddCustomerAsync(Customer customer)
     {
+        customer.FileName = GetStoredFileName(fileNames.FirstOrDefault());
         //sending HTTP POST request to the api/customer -> sending over customer object as JSON
         var response = await HttpClient.PostAsJsonAsync("api/customer", customer);
         //returning success or not
@@ -123,15 +126,17 @@
             fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
 
             fileNames.Add(file.Name);
+            SingleName = file.Name;
             content.Add(
                 content: fileContent,
                 name: "\"files\"",
-                fileName:file.Name);          
+                fileName:file.Name);
+                
         }
 
         var response = await HttpClient.PostAsync("/api/File", content);
         var newUploadResult = await response.Content.ReadFromJsonAsync<List<UploadResult>>();
-        ToastService.ShowSuccess("Your file(s) have been sucessfully uploaded");
+        ToastService.ShowSuccess("Your file has been sucessfully uploaded");
 
         if(newUploadResult != null){
             uploadResults = uploadResults.Concat(newUploadResult).ToList();

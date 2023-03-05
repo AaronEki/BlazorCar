@@ -15,6 +15,7 @@
                     <th>Surname</th>
                     <th>Email Address</th>
                     <th>PhoneNumber</th>
+                    <th>File Uploaded</th>
                 </tr>
                 @foreach(var customer in customers){
                     <tr>
@@ -23,24 +24,12 @@
                         <td>@customer.Surname</td>
                         <td>@customer.Email</td>
                         <td>@customer.PhoneNumber</td>
+                        <td>@customer.FileName</td>
                     </tr>
                 }
             </table>
         }
-    </div>
-    <div>
-        @*(randomised filenames are recommended in microsoft documentation)*@
-        <h3>Uploaded files:</h3>
-        @if(files != null){
-            <ul>
-            @foreach(var file in files){
-                <li>
-                    @file
-                </li>
-            }
-            </ul>
-        }
-    </div>
+    </div>    
 </div>
 
 

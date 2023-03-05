@@ -42,6 +42,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICarService, CarService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddHttpContextAccessor();
 
 //configuring the jwtbearer authentication scheme
 builder.Services.AddAuthentication(o =>
